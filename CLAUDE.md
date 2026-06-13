@@ -1,4 +1,4 @@
-# 音乐魔方 B60 Scorecard Generator
+# 音乐魔方 B60 Generator
 
 ## 目录结构
 ```
@@ -8,17 +8,15 @@ scorecard_gen/
 ├── get_token.py         # Step1: hosts劫持 + CA证书 + 捕获 token/roleid → config.json
 ├── crawl_scores.py      # Step2: rating_info → music_detail → player_info → best_scores.json
 ├── generate.py          # Step3: 检查资源 → 无头浏览器渲染 → 保存 jubeat_scorecard.png
-├── setup.bat            # 安装 Python 依赖 (pip install -r requirements.txt)
 ├── requirements.txt     # cryptography, requests
-├── b60_template.html       # 成绩单模板，浏览器渲染 + html2canvas 导出
+├── b60_template.html    # 成绩单模板，浏览器渲染 + html2canvas 导出
 ├── .ca/                 # CA证书 (自动生成)
 ├── .static/             # 静态资源 (字体/背景/评级图标等)
 ├── .grade_cache/        # 等级图标 (grade_s.png 等)
 ├── .cover_cache/        # 歌曲封面 (运行时下载)
 ├── config.json          # 自动生成，存 token + roleid
 ├── best_scores.json     # 爬取结果
-├── jubeat_scorecard.png # 最终生成的成绩单图片
-└── dist/JubeatB60/      # PyInstaller 打包输出
+└── jubeat_scorecard.png # 最终生成的成绩单图片
 ```
 
 ## API 信息
@@ -36,15 +34,15 @@ scorecard_gen/
 ```json
 {
   "nickName": "", "monikerName": "",
-  "rating_name": "PINK", "rating_lv": 8, "rating_value": 7906.4,
-  "jubilityRank": 27, "photo": "...", "lv": 110,
-  "exp": 623997, "expMax": 632700,
+  "rating_name": "PINK", "rating_lv": 8, "rating_value": 1234,
+  "jubilityRank": 27, "photo": "...", "lv": 100,
+  "exp": 600000, "expMax": 610000,
   "scores": [{
-    "name": "", "artist": "", "diff": 3, "lv": 10.3,
-    "isHard": 0, "isTwo": 0, "score": 963316,
-    "musicRate": 108.67, "rating": 141.3, "grade": 7,
-    "pic": "https://...", "pic_local": ".cover_cache/60001007.png",
-    "type": "pickup", "songId": 60001007
+    "name": "", "artist": "", "diff": 3, "lv": 10.,
+    "isHard": 0, "isTwo": 0, "score": 1000000,
+    "musicRate": 120, "rating": 150, "grade": 7,
+    "pic": "https://...", "pic_local": ".cover_cache/10000001.png",
+    "type": "pickup", "songId": 10000001
   }]
 }
 ```
