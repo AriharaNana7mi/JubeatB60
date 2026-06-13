@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="referrer" content="no-referrer">
+<title>音乐魔方 B60</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+/* Jubility */
+:root {
+  --card-w: 180px; --card-h: 80px; --radius: 4px;
+  --font-name: 15px; --font-stat: 10px; --font-rating: 18px;
+  --cols: 5;
+}
+
+@font-face {
+  font-family: 'LineSeed';
+  src: url('.static/fonts/LINESeedSans_A_Bd.otf');
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#000; display:flex; justify-content:center; }
+
+.c {
+  width: calc(12px*2 + var(--card-w)*var(--cols) + 6px*(var(--cols) - 1));
+  background: #c8f2ff url('.static/jubeat/bg_icon.png') no-repeat;
+  background-size: 100% auto;
+  padding: 12px 12px 20px;
+  font-family: 'LineSeed', 'Microsoft YaHei', sans-serif;
+}
+
+/* ═══════════ Header ═══════════ */
+.hd {
+  padding:10px 8px 12px; margin-bottom:10px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+}
+
+/* ── User card */
+.user-card {
+  width: 500px; flex-shrink:0;
+  background: linear-gradient(180deg, #fff, #c4dbee);
+  border: 4px solid #003a47;
+  border-radius: 8px;
+  box-shadow: inset 0 -5px 0 0 #9fb9bd;
+  height: 100px;
+  display: flex; align-items: center;
+  padding: 0 14px;
+}
+.user-card .av-wrap {
+  position: relative; flex-shrink: 0;
+  width: 72px; height: 72px;
+}
+.user-card .av-wrap .av-bd {
+  position: absolute; inset: -1px;
+  border: 1px solid #003a47;
+  border-radius: 2px;
+}
+.user-card .av-img {
+  width: 72px; height: 72px;
+  border: 1px solid #b4f3ff;
+  border-radius: 1px;
+  display: block; object-fit: cover;
+  box-sizing: border-box;
+}
+/* Lv badge */
+.user-card .av-lv {
+  position: absolute; bottom: 0px; right: 0px;
+  background: #00aaf3; color: #fff;
+  font-size: 12px; font-weight: 700; font-family: 'LineSeed','Microsoft YaHei',sans-serif;
+  height: 18px; min-width: 24px; line-height: 18px;
+  padding: 0 6px;
+  border-radius: 4px 0 0 0;
+  -webkit-text-stroke: 1px #000;
+  paint-order: stroke fill;
+  display: flex; align-items: center; justify-content: center;
+  white-space: nowrap;
+}
+.user-card .av-lv .lv-label { font-size: 12px; margin-right: 2px; }
+
+/* User info 右侧 */
+.user-card .uinfo {
+  flex: 1; min-width: 0; margin-left: 16px;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 8px;
+}
+.user-card .uinfo .u-name-row {
+  display: flex; align-items: center; gap: 16px;
+}
+.user-card .uinfo .u-name {
+  font-size: 22px; font-weight: 700; color: #333;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+.user-card .uinfo .s-inline {
+  display: inline-block; position: relative;
+  height: 30px; line-height: 30px;
+  padding: 0 10px 0 12px;
+  background: url('.static/jubeat/rating/moniker_1.png') no-repeat;
+  background-size: auto 100%;
+  color: #fff; font-size: 14px; font-weight: 700;
+  -webkit-text-stroke: 1.5px #8040c0;
+  paint-order: stroke fill;
+  white-space: nowrap;
+  padding-right: 30%;
+  flex-shrink: 1;
+}
+
+/* Exp bar */
+.exp-bar {
+  position: relative; height: 24px; width: 100%;
+}
+.exp-bar .exp-track {
+  position: absolute; inset: 0;
+  height: 100%; width: 100%;
+  object-fit: fill;
+}
+.exp-bar .exp-fill {
+  position: absolute; left: 4px; top: 50%; transform: translateY(-50%);
+  height: 18px;
+  background: url('.static/jubeat/jubeat_progress.png') no-repeat;
+  background-size: 100% 100%;
+  border-radius: 100px;
+  min-width: 8px;
+}
+.exp-bar .exp-text {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: #fff;
+  -webkit-text-stroke: 1.5px #000;
+  paint-order: stroke fill;
+}
+
+/* Jubility gauge */
+.gauge-wrap { display:flex; align-items:center; gap:14px; flex-shrink:0; }
+.gauge-wrap .gauge-left { position:relative; width:85px; height:133px; }
+.gauge-left-tilt {
+  position:absolute; inset:0;
+  transform:rotate(5deg); transform-origin:50% 50%;
+  display:flex; flex-direction:column; align-items:center;
+}
+.gauge-bg {
+  position:absolute; inset:0;
+  background: url('.static/jubeat/center/player_jubility.png') no-repeat;
+  background-size:100% 100%;
+}
+.gauge-wrap .gauge-img { width:85px; height:85px; flex-shrink:0; position:relative; margin-top:24px; }
+.gauge-wrap .gauge-name { font-size:18px; font-weight:700; color:#333; margin-top:-10px; white-space:nowrap; position:relative; }
+.gauge-wrap .gauge-right { display:flex; flex-direction:column; align-items:flex-end; }
+.gauge-wrap .gauge-val { font-size:40px; color:#2b585e; font-weight:700; line-height:1; -webkit-text-stroke:1.5px #fff; paint-order:stroke fill; }
+.gauge-wrap .gauge-rank { font-size:18px; color:#00657c; margin-top:4px; }
+
+/* Section tabs */
+.tabs { display:flex; border:3px solid #00657c; border-radius:4px; overflow:hidden; margin-bottom:10px; }
+.tabs .tab {
+  flex:1; display:flex; align-items:center; justify-content:space-between;
+  padding:8px 16px; font-size:20px; font-weight:900;
+  background:#c2f7ff; color:#2b585e;
+  box-shadow:inset 0 -6px 0 0 #79edff, inset 0 6px 0 0 rgba(255,255,255,.5);
+  font-family: 'LineSeed', 'Microsoft YaHei', sans-serif;
+}
+.tabs .tab .tab-label { flex-shrink:1; }
+.tabs .tab .tab-stats {
+  font-size:14px; font-weight:700; color:#00657c;
+  white-space:nowrap; flex-shrink:0;
+}
+
+/* Row */
+.sr { display:flex; gap:6px; margin-bottom:5px; }
+.sr:last-child { margin-bottom:0; }
+
+/* ═══════════════ 单卡 ═══════════════ */
+.card {
+  width:var(--card-w); height:var(--card-h);
+  background:#fff; border-radius:var(--radius);
+  display:flex; align-items:stretch;
+  position:relative; overflow:hidden;
+  box-shadow:0 2px 4px rgba(0,0,0,.12);
+  padding:0;
+}
+/* 封面 - 左侧满高度 */
+.card .cv {
+  width:var(--card-h); height:100%;
+  border-radius:var(--radius) 0 0 var(--radius);
+  object-fit:cover; flex-shrink:0;
+  position:relative; z-index:1;
+}
+/* Hardmode 角标  */
+.card .hd-badge {
+  position:absolute; top:0; left:0; z-index:5;
+  background:#000; color:#f00;
+  font-size:12px; font-weight:1300;
+  padding:4px 5px;
+  border-radius:var(--radius) 0 4px 0;
+  line-height:1;
+}
+
+/* 左下角 badges 容器 */
+.card .bl {
+  position:absolute; bottom:0; left:0; z-index:2;
+  display:flex;
+}
+/* 难度+定数 badge */
+.card .bl .df {
+  font-size:9px; font-weight:700; line-height:1;
+  padding:3px 5px; color:#fff;
+  border-radius:0 0 0 0;
+  text-shadow:1px 0 #000, -1px 0 #000, 0 1px #000, 0 -1px #000;
+}
+.card .bl .df.bsc { background:#11b500; }
+.card .bl .df.adv { background:#ff8400; }
+.card .bl .df.ext { background:#ff2f57; }
+/* [2] badge - 紧接定数右侧, 紫色 */
+.card .bl .two {
+  font-size:8px; font-weight:700; line-height:1;
+  padding:3px 3px; color:#fff;
+  border-radius: 0 4px 0 0;
+  background:#96c;
+  text-shadow:1px 0 #000, -1px 0 #000, 0 1px #000, 0 -1px #000;
+}
+
+/* 信息区 - 右侧, 毛玻璃 */
+.card .if {
+  flex:1; min-width:0; z-index:1;
+  display:flex; flex-direction:column; justify-content:space-evenly;
+  padding:2px 6px;
+  position:relative; overflow:hidden;
+}
+.card .if .if-bg {
+  position:absolute; inset:-20px; z-index:0;
+  background-size:cover; background-position:center;
+  filter:blur(16px);
+}
+.card .if .if-dim {
+  position:absolute; inset:0; z-index:0;
+  background: linear-gradient(rgba(65,217,255,0.2),rgba(65,217,255,0.2)), rgba(0,0,0,0.6);
+}
+.card .if .nm, .card .if .row2, .card .if .row3, .card .if .row4 {
+  position:relative; z-index:1;
+}
+.card .nm {
+  color:#fff; font-size:var(--font-name); font-weight:700;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;
+}
+.card .row2 { display:flex; align-items:center; }
+.card .sc { color:#fff; font-size:var(--font-stat); font-weight:700; -webkit-text-stroke:1px #000; paint-order:stroke fill; }
+.card .gr { height:22px; flex-shrink:0; }
+.card .row3 { display:flex; align-items:baseline; gap:0px; }
+.card .mr { color:rgb(255,165,52); font-size:15px; font-weight:700; -webkit-text-stroke:1px #000; paint-order:stroke fill; }
+.card .row4 { display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+.card .row4 .rv { color:rgb(74,148,255); font-size:var(--font-rating); font-weight:700; -webkit-text-stroke:1px #000; paint-order:stroke fill; }
+/* Download btn */
+.btns { position:fixed; top:12px; right:12px; z-index:99; display:flex; gap:8px; }
+.btns button {
+  padding:8px 16px; border:none; border-radius:6px; font-size:14px; font-weight:bold; cursor:pointer;
+}
+.btns .dl { background:#ffc83c; color:#1a1a2e; }
+.btns .dl:hover { filter:brightness(1.1); }
+</style>
+</head>
+<body>
+
+<div class="btns">
+  <button class="dl" onclick="download()">下载 PNG</button>
+</div>
+
+<div class="c" id="scorecard"></div>
+
+<script>
+const DCLS = {1:'bsc',2:'adv',3:'ext'};
+const GRADES = {1:'e',2:'d',3:'c',4:'b',5:'a',6:'s',7:'ss',8:'sss',9:'exc'};
+
+function median(arr) {
+  const s = [...arr].sort((a,b)=>a-b);
+  const m = Math.floor(s.length/2);
+  return s.length%2 ? s[m] : (s[m-1]+s[m])/2;
+}
+function avg(arr) { return arr.reduce((a,b)=>a+b,0)/arr.length; }
+
+function card(s) {
+  const dc = DCLS[s.diff]||'bsc';
+  const sc = s.score ? String(s.score) : '';
+  const mr = s.musicRate ? s.musicRate.toFixed(1)+'%' : '';
+  const gr = s.grade ? `<img class="gr" src=".grade_cache/grade_${GRADES[s.grade]}.png">` : '';
+  const lv = s.lv ? s.lv.toFixed(1) : '';
+  const hdbadge = s.isHard ? '<span class="hd-badge">H</span>' : '';
+  const two = s.isTwo ? '<span class="two">[2]</span>' : '';
+  const pic = s.pic_local || s.pic;
+
+  return `<div class="card">
+    ${hdbadge}
+    <div class="bl"><span class="df ${dc}">${lv}</span>${two}</div>
+    <img class="cv" src="${pic}" onerror="this.style.background='#d0e8ec'">
+    <div class="if">
+      <div class="if-bg" style="background-image:url(${pic})"></div>
+      <div class="if-dim"></div>
+      <div class="nm">${s.name}</div>
+      <div class="row2"><span class="sc">${sc}</span></div>
+      <div class="row3"><span class="mr">${mr}</span></div>
+      <div class="row4"><span class="rv">${s.rating.toFixed(1)}</span>${gr}</div>
+    </div>
+  </div>`;
+}
+
+const COLS = 5;
+
+function section(songs) {
+  let html = '';
+  const rows = Math.ceil(songs.length / COLS);
+  for (let r=0; r<rows; r++) {
+    html += '<div class="sr">';
+    for (let c=0; c<COLS; c++) {
+      const idx = r*COLS+c;
+      html += idx < songs.length ? card(songs[idx]) : '<div class="card" style="opacity:0"></div>';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+fetch('best_scores.json').then(r=>r.json()).then(data => {
+  const pickup = data.scores.filter(s=>s.type==='pickup');
+  const common = data.scores.filter(s=>s.type==='common');
+
+  function secWithTab(title, songs) {
+    const rt = songs.map(s=>s.rating);
+    const stats = songs.length ? `<span class="tab-stats">avg ${avg(rt).toFixed(1)} | med ${median(rt).toFixed(1)}</span>` : '';
+    return `<div class="tabs"><div class="tab active"><span class="tab-label">${title}</span>${stats}</div></div>${section(songs)}`;
+  }
+
+  const RATING_COLORS = {
+    begin:'#61b0e8', pink:'#f77af3', orange:'#ff9900', gold:'#ffc83c',
+    green:'#22cc66', blue:'#4488ff', purple:'#9944ff', violet:'#8844dd',
+    yellow_green:'#88cc22', light_blue:'#22cccc', limit:'#ff4444'
+  };
+  const gaugeIdx = String(data.rating_lv - 1).padStart(2, '0');
+  const gaugeSrc = `.static/jubeat/rating/jby_ttljby_gauge_${gaugeIdx}.png`;
+  const nick = data.nickName || '';
+  const moniker = data.monikerName || '';
+  const rank = data.jubilityRank || '?';
+  const photo = data.photo || '';
+  const playerLv = data.lv || 1;
+  const exp = data.exp || 0;
+  const expMax = data.expMax || 100;
+  const expPct = expMax > 0 ? Math.max(8, (exp / expMax) * 100) : 8;
+  const ratingColor = RATING_COLORS[data.rating_name.toLowerCase()] || '#f77af3';
+
+  document.getElementById('scorecard').innerHTML = `
+    <div class="hd">
+      <div style="display:flex;flex-direction:column;">
+        <div class="user-card">
+          <div class="av-wrap">
+            <div class="av-bd"></div>
+            <img class="av-img" src=".static/jubeat/avatar.png" onerror="this.src='${photo}'">
+            <div class="av-lv"><span class="lv-label">Lv</span>${playerLv}</div>
+          </div>
+          <div class="uinfo">
+            <div class="u-name-row">
+              <div class="u-name">${nick}</div>
+              ${moniker ? `<span class="s-inline">${moniker}</span>` : ''}
+            </div>
+            <div class="exp-bar">
+              <img class="exp-track" src=".static/jubeat/exp_not_bg.png">
+              <div class="exp-fill" style="width:calc(${expPct}% - 4px)"></div>
+              <div class="exp-text">${exp}/${expMax}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gauge-wrap">
+        <div class="gauge-left">
+          <div class="gauge-left-tilt">
+            <div class="gauge-bg"></div>
+            <img class="gauge-img" src="${gaugeSrc}">
+            <span class="gauge-name" style="text-shadow:2px 0 0 ${ratingColor}">${data.rating_name}</span>
+          </div>
+        </div>
+        <div class="gauge-right">
+          <span class="gauge-val" style="color:${ratingColor}">${data.rating_value}</span>
+          <span class="gauge-rank">全服排行 ${rank}</span>
+        </div>
+      </div>
+    </div>
+    ${secWithTab('PICK UP', pickup)}
+    ${secWithTab('COMMON', common)}
+  `;
+  setTimeout(download, 1500);
+});
+
+async function download() {
+  const el = document.getElementById('scorecard');
+  const canvas = await html2canvas(el, {backgroundColor:'#12121e', scale:2});
+  const dataUrl = canvas.toDataURL('image/png');
+  await fetch('/save', {method:'POST', body:JSON.stringify({image:dataUrl})});
+}
+</script>
+</body>
+</html>

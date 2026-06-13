@@ -1,0 +1,20 @@
+# 游戏素材 (版权保护，不纳入仓库)
+.static/
+.grade_cache/
+
+# 运行时生成数据
+token.txt
+config.json
+best_scores.json
+jubeat_scorecard.png
+debug_capture.log
+.cover_cache/
+.ca/
+
+# PyInstaller
+dist/
+build/
+*.spec
+__pycache__/
+*.pyc
+.claude/
