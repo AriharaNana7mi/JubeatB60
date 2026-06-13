@@ -12,6 +12,12 @@ echo   Jubeat B60
 echo ========================================
 echo.
 
+if not exist ".static\jubeat\bg_icon.png" (
+    echo 首次使用，解压素材...
+    python _assets.py
+    echo.
+)
+
 echo [1/3] get_token...
 python get_token.py
 if %errorlevel% neq 0 (
