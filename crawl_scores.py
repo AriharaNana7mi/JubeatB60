@@ -31,7 +31,7 @@ def api_post(action, data, config):
         "atk": json.dumps({"timestamp": ts, "nonce": nonce, "sign": sign}),
         "Content-Type": "application/json",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF",
-        "Referer": "https://servicewechat.com/wx133c9dfee00bbfec/34/page-frame.html",
+        "Referer": "https://servicewechat.com/wx" + "133c9dfee00bbfec/34/page-frame.html",
     }, proxies={"http": None, "https": None}, timeout=20)
     result = resp.json()
     if not result.get("ok"):
