@@ -10,7 +10,7 @@ scorecard_gen/
 ├── generate.py          # Step3: 检查资源 → 无头浏览器渲染 → 保存 jubeat_scorecard.png
 ├── setup.bat            # 安装 Python 依赖 (pip install -r requirements.txt)
 ├── requirements.txt     # cryptography, requests
-├── b60_template       # 成绩单模板，浏览器渲染 + html2canvas 导出
+├── b60_template.html       # 成绩单模板，浏览器渲染 + html2canvas 导出
 ├── .ca/                 # CA证书 (自动生成)
 ├── .static/             # 静态资源 (字体/背景/评级图标等)
 ├── .grade_cache/        # 等级图标 (grade_s.png 等)
@@ -54,9 +54,9 @@ scorecard_gen/
 python -m PyInstaller --onedir --name JubeatB60 -y \
   --add-data ".static;.static" \
   --add-data ".grade_cache;.grade_cache" \
-  --add-data "b60_template;." \
+  --add-data "b60_template.html;." \
   --hidden-import=cryptography \
   --hidden-import=cryptography.hazmat.backends.openssl \
   main.py
-cp -r .static .grade_cache b60_template dist/JubeatB60/
+cp -r .static .grade_cache b60_template.html dist/JubeatB60/
 ```

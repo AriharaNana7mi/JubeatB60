@@ -1,5 +1,5 @@
 """
-检查资源 → 生成 b60_template → 无头浏览器渲染 → 保存 PNG
+检查资源 → 生成 b60_template.html → 无头浏览器渲染 → 保存 PNG
 用法: python generate.py
 """
 import os, sys, json, base64, subprocess, threading
@@ -66,8 +66,8 @@ def main():
     if not check_assets():
         return 1
 
-    if not os.path.exists(os.path.join(SCRIPT_DIR, "b60_template")):
-        print("[!] b60_template 不存在")
+    if not os.path.exists(os.path.join(SCRIPT_DIR, "b60_template.html")):
+        print("[!] b60_template.html 不存在")
         return 1
 
     # 启动 HTTP 服务
@@ -92,7 +92,7 @@ def main():
     if not exe:
         print("[!] 未找到 Edge/Chrome，打开浏览器手动下载...")
         import webbrowser
-        webbrowser.open("http://127.0.0.1:8080/b60_template")
+        webbrowser.open("http://127.0.0.1:8080/b60_template.html")
         input("按回车退出...")
         server.shutdown()
         return 1
@@ -101,7 +101,7 @@ def main():
     proc = subprocess.Popen([
         exe, "--headless=new", "--disable-gpu",
         "--window-size=1200,900",
-        "http://127.0.0.1:8080/b60_template",
+        "http://127.0.0.1:8080/b60_template.html",
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     if done.wait(timeout=30):
